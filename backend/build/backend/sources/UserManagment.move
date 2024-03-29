@@ -7,7 +7,6 @@ module backend::UserManagment {
     use sui::object_table::{Self, ObjectTable};
     use sui::event;
 
-    const USER_ALREADY_CREATED: u64 = 0;
 
     struct User has key, store {
         id: UID, 

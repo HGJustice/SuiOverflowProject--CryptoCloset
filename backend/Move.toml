@@ -1,7 +1,8 @@
 [package]
 name = "backend"
-
-# edition = "2024.alpha" # To use the Move 2024 edition, currently in alpha
+version = "0.1.0"
+# edition = "legacy"
+ # To use the Move 2024 edition, currently in alpha
 # license = ""           # e.g., "MIT", "GPL", "Apache 2.0"
 # authors = ["..."]      # e.g., ["Joe Smith (joesmith@noemail.com)", "John Snow (johnsnow@noemail.com)"]
 
