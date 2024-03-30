@@ -105,4 +105,9 @@ module backend::UserManagment {
         _ = old_value;
     }
 
+    #[test_only]
+    public fun init_for_testing(_ctx: &mut TxContext){
+        init(_ctx);
+    }
+
 }

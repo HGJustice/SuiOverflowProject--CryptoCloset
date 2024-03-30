@@ -5,14 +5,14 @@ compiled_package_info:
     backend: "0000000000000000000000000000000000000000000000000000000000000000"
     std: "0000000000000000000000000000000000000000000000000000000000000001"
     sui: "0000000000000000000000000000000000000000000000000000000000000002"
-  source_digest: ADB7EDC0E9EEE7ABA618123EF6640E786FF59B0DE8D11C2825DB2408CAF43DB9
+  source_digest: F6BBE4C40278408AB116B67FF5C60DA1FE0710C3550F8EE2336E30DD9B271008
   build_flags:
-    dev_mode: false
-    test_mode: false
+    dev_mode: true
+    test_mode: true
     generate_docs: false
     install_dir: ~
     force_recompilation: false
-    lock_file: ".\\Move.lock"
+    lock_file: ~
     fetch_deps_only: false
     skip_fetch_latest_git_deps: true
     default_flavor: sui
