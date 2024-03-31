@@ -54,7 +54,6 @@ module backend::UserManagment {
         )
     }
 
-
     public entry fun create_user(firstname: vector<u8>, lastname: vector<u8>, 
     dob: u64,phonenumber: u64, email: vector<u8>, username: vector<u8>, userhub: &mut UserHub, _ctx: &mut TxContext){
         let potentialUser = object_table::borrow_mut(&mut userhub.users, tx_context::sender(_ctx));
@@ -88,6 +87,22 @@ module backend::UserManagment {
         object_table::add(&mut userhub.users, tx_context::sender(_ctx), newUser);
     }
 
+    public fun get_user(userhub: &UserHub, _ctx: &TxContext): (String, String, u64, address, Option<String>, u64, String, String, address, bool){
+         let user: &User = object_table::borrow(&userhub.users, tx_context::sender(_ctx));
+        (
+            user.firstName,
+            user.lastName,
+            user.dob,
+            user.owner,
+            user.bio,
+            user.phoneNumber,
+            user.email,
+            user.userName,
+            user.userAddress,
+            user.isActive
+        )
+    }
+
     public entry fun update_bio(userhub: &mut UserHub, new_bio: vector<u8>, _ctx: &mut TxContext){
         let user = object_table::borrow_mut(&mut userhub.users, tx_context::sender(_ctx));
         assert!(tx_context::sender(_ctx) == user.owner, NOT_THE_OWNER);
@@ -109,5 +124,16 @@ module backend::UserManagment {
     public fun init_for_testing(_ctx: &mut TxContext){
         init(_ctx);
     }
+    public fun getOwner(userhub: &UserHub): address {
+        userhub.owner
+    }
+
+    public fun is_user_active(user: &User): bool {
+        user.isActive
+    }
+
+    
+
+
 
 }

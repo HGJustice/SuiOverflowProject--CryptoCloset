@@ -20,13 +20,21 @@ module backend::UserManagment_Test{
 
         test_scenario::next_tx(scenario, owner);
         {
-            let userhub = test_scenario::take_from_sender<UserHub>(scenario);
-        
-           UserManagment::create_user(b"kris", b"taylor", 031084, 902893, b"hei@l.de", b"bully", &mut userhub, test_scenario::ctx(scenario));
-           let user = object_table::borrow(&userhub.users, owner);
-           assert!(!test_scenario::has_most_recent_for_sender<User>(scenario), 0);
+           let userhub_val = test_scenario::take_shared<UserManagment::UserHub>(scenario);
+           let userhub = &mut userhub_val;
+           assert!(UserManagment::getOwner(userhub) == owner, 0); 
+           test_scenario::return_shared(userhub_val);
+        };
 
-           test_scenario::return_to_sender(scenario, userhub)
+        test_scenario::next_tx(scenario, owner);
+        {
+           let userhub = test_scenario::take_shared<UserManagment::UserHub>(scenario); 
+          
+           UserManagment::create_user(b"kris", b"taylor", 031084, 902893, b"hei@l.de", b"bully", &mut userhub, test_scenario::ctx(scenario));
+           assert!(test_scenario::has_most_recent_for_sender<User>(scenario), 0);
+          
+
+           test_scenario::return_shared(userhub);
         };
 
         test_scenario::end(scenario_val);
