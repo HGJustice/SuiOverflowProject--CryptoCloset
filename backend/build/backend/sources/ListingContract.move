@@ -8,6 +8,8 @@ module backend::ListingContract {
     use sui::object_table::{Self, ObjectTable};
     use sui::event;
 
+    use backend::UserManagment::{User, UserHub};
+
     struct Listing has key, store {
         id: UID,
         picture: Url,
@@ -17,25 +19,45 @@ module backend::ListingContract {
         brand: String,
         condition: String,
         price: u64,
+        counter: u64,
     }
 
-    // struct ListingHub has key, store {
-    //     id: UID,
-    //     owner: address,
-    //     counter: u64,
-    //     listings: ObjectTable<u64, Listing>
-    // }
+    struct ListingCreated has copy, drop {
+        id: ID,
+        owner: address,
+        brand: String,
+        price: u64,
+    }
 
-    // fun init(_ctx: &mut TxContext){
-    //     transfer::share_object(
-    //         ListingHub{
-    //             id: object::new(_ctx),
+    // public entry fun create_listing(picture: vector<u8>, description: vector<u8>, category:vector<u8>, brand:vector<u8>, condition:vector<u8>,
+    //                                                                                                         price: u64, _ctx: &mut TxContext) {
+  
+    //     let id = object::new(_ctx);
+
+    //     event::emit(
+    //         ListingCreated{
+    //             id: object::uid_to_inner(&id),
     //             owner: tx_context::sender(_ctx),
-    //             counter: 0,
-    //             listings: object_table::new(_ctx),
+    //             brand: string::utf8(brand),
+    //             price: price,
     //         }
-    //     )
-    // }
+    //     );
 
+    //    let thisCounter = 0;
+
+    //     let newListing = Listing{
+    //         id: id,
+    //         picture: url::new_unsafe_from_bytes(picture),
+    //         owner: tx_context::sender(_ctx),
+    //         description: string::utf8(description),
+    //         category: string::utf8(category),
+    //         brand: string::utf8(brand),
+    //         condition: string::utf8(condition),
+    //         price: price,
+    //         counter: thisCounter + 1,
+    //     };
+
+    //     object_table::add(&mut User.listing, thisCounter, newListing );
+    // }
 
 }

@@ -29,35 +29,35 @@ module backend::ListingContract {
         price: u64,
     }
 
-    public entry fun create_listing(picture: vector<u8>, description: vector<u8>, category:vector<u8>, brand:vector<u8>, condition:vector<u8>,
-                                                                                                            price: u64, _ctx: &mut TxContext) {
+    // public entry fun create_listing(picture: vector<u8>, description: vector<u8>, category:vector<u8>, brand:vector<u8>, condition:vector<u8>,
+    //                                                                                                         price: u64, _ctx: &mut TxContext) {
   
-        let id = object::new(_ctx);
+    //     let id = object::new(_ctx);
 
-        event::emit(
-            ListingCreated{
-                id: object::uid_to_inner(&id),
-                owner: tx_context::sender(_ctx),
-                brand: string::utf8(brand),
-                price: price,
-            }
-        );
+    //     event::emit(
+    //         ListingCreated{
+    //             id: object::uid_to_inner(&id),
+    //             owner: tx_context::sender(_ctx),
+    //             brand: string::utf8(brand),
+    //             price: price,
+    //         }
+    //     );
 
-       let thisCounter = 0;
+    //    let thisCounter = 0;
 
-        let newListing = Listing{
-            id: id,
-            picture: url::new_unsafe_from_bytes(picture),
-            owner: tx_context::sender(_ctx),
-            description: string::utf8(description),
-            category: string::utf8(category),
-            brand: string::utf8(brand),
-            condition: string::utf8(condition),
-            price: price,
-            counter: thisCounter + 1,
-        };
+    //     let newListing = Listing{
+    //         id: id,
+    //         picture: url::new_unsafe_from_bytes(picture),
+    //         owner: tx_context::sender(_ctx),
+    //         description: string::utf8(description),
+    //         category: string::utf8(category),
+    //         brand: string::utf8(brand),
+    //         condition: string::utf8(condition),
+    //         price: price,
+    //         counter: thisCounter + 1,
+    //     };
 
-        object_table::add(&mut User.listing, thisCounter, newListing );
-    }
+    //     object_table::add(&mut User.listing, thisCounter, newListing );
+    // }
 
 }
