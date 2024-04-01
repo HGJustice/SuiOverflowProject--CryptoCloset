@@ -7,6 +7,8 @@ module backend::UserManagment {
     use sui::object_table::{Self, ObjectTable};
     use sui::event;
 
+    use backend::ListingContract::Listing;
+
     const USER_ALREADY_CREATED: u64 = 0;
     const NOT_THE_OWNER: u64 = 1;
 
@@ -15,13 +17,13 @@ module backend::UserManagment {
         firstName: String,
         lastName: String,
         dob: u64,
-        owner: address,
         bio: Option<String>,
         phoneNumber: u64,
         email: String, 
         userName: String,
         userAddress: address,
         isActive: bool,
+        listings: ObjectTable<u64, Listing>,
     }
 
     struct UserHub has key {
@@ -75,25 +77,24 @@ module backend::UserManagment {
             firstName: string::utf8(firstname),
             lastName: string::utf8(lastname),
             dob: dob,
-            owner: tx_context::sender(_ctx),
             bio: option::none(),
             phoneNumber: phonenumber,
             email: string::utf8(email),
             userName: string::utf8(username),
             userAddress: tx_context::sender(_ctx),
             isActive: true,
+            listings: object_table::new(_ctx)
         };
 
         object_table::add(&mut userhub.users, tx_context::sender(_ctx), newUser);
     }
 
-    public fun get_user(userhub: &UserHub, _ctx: &TxContext): (String, String, u64, address, Option<String>, u64, String, String, address, bool){
+    public fun get_user(userhub: &UserHub, _ctx: &TxContext): (String, String, u64, Option<String>, u64, String, String, address, bool){
          let user: &User = object_table::borrow(&userhub.users, tx_context::sender(_ctx));
         (
             user.firstName,
             user.lastName,
             user.dob,
-            user.owner,
             user.bio,
             user.phoneNumber,
             user.email,
@@ -105,7 +106,7 @@ module backend::UserManagment {
 
     public entry fun update_bio(userhub: &mut UserHub, new_bio: vector<u8>, _ctx: &mut TxContext){
         let user = object_table::borrow_mut(&mut userhub.users, tx_context::sender(_ctx));
-        assert!(tx_context::sender(_ctx) == user.owner, NOT_THE_OWNER);
+        assert!(tx_context::sender(_ctx) == user.userAddress, NOT_THE_OWNER);
 
         let old_value = option::swap_or_fill(&mut user.bio, string::utf8(new_bio));
 

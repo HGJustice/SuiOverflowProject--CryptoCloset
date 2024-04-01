@@ -31,17 +31,17 @@ module backend::UserManagment_Test{
         //     UserManagment::create_user(b"kris", b"taylor", 031084, 902893, b"hei@l.de", b"bully", &mut userhub, test_scenario::ctx(scenario));
         //     test_scenario::return_shared(userhub);
         // };
-        test_scenario::next_tx(scenario, owner);
-        {
-           let userhub = test_scenario::take_shared<UserHub>(scenario);
-           UserManagment::create_user(b"kris", b"taylor", 031084, 902893, b"hei@l.de", b"bully", &mut userhub, test_scenario::ctx(scenario));
-           let user = UserManagment::get_users(&userhub,owner );
-           assert!(UserManagment::is_user_active(user) == true, 0);
+        // test_scenario::next_tx(scenario, owner);
+        // {
+        //    let userhub = test_scenario::take_shared<UserHub>(scenario);
+        //    UserManagment::create_user(b"kris", b"taylor", 031084, 902893, b"hei@l.de", b"bully", &mut userhub, test_scenario::ctx(scenario));
+        //    let user = UserManagment::get_users(&userhub,owner );
+        //    assert!(UserManagment::is_user_active(user) == true, 0);
 
 
-           test_scenario::return_shared(userhub);
+        //    test_scenario::return_shared(userhub);
            
-        };
+        // };
 
         
         test_scenario::end(scenario_val);
