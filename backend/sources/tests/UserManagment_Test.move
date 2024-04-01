@@ -7,8 +7,8 @@ module backend::UserManagment_Test{
     #[test]
     fun test_crate(){
         let owner = @0xA;
-        let addy1 = @0xB;
-        let addy2 = @0xC;
+        let _addy1 = @0xB;
+        let _addy2 = @0xC;
 
         let scenario_val = test_scenario::begin(owner);
         let scenario = &mut scenario_val;
@@ -21,22 +21,29 @@ module backend::UserManagment_Test{
         test_scenario::next_tx(scenario, owner);
         {
            let userhub_val = test_scenario::take_shared<UserManagment::UserHub>(scenario);
-           let userhub = &mut userhub_val;
+           let userhub = &userhub_val;
            assert!(UserManagment::getOwner(userhub) == owner, 0); 
            test_scenario::return_shared(userhub_val);
         };
-
+        // test_scenario::next_tx(scenario, owner);
+        // {
+        //     let userhub = test_scenario::take_shared<UserManagment::UserHub>(scenario);
+        //     UserManagment::create_user(b"kris", b"taylor", 031084, 902893, b"hei@l.de", b"bully", &mut userhub, test_scenario::ctx(scenario));
+        //     test_scenario::return_shared(userhub);
+        // };
         test_scenario::next_tx(scenario, owner);
         {
-           let userhub = test_scenario::take_shared<UserManagment::UserHub>(scenario); 
-          
+           let userhub = test_scenario::take_shared<UserHub>(scenario);
            UserManagment::create_user(b"kris", b"taylor", 031084, 902893, b"hei@l.de", b"bully", &mut userhub, test_scenario::ctx(scenario));
-           assert!(test_scenario::has_most_recent_for_sender<User>(scenario), 0);
-          
+           let user = UserManagment::get_users(&userhub,owner );
+           assert!(UserManagment::is_user_active(user) == true, 0);
+
 
            test_scenario::return_shared(userhub);
+           
         };
 
+        
         test_scenario::end(scenario_val);
     }
 }

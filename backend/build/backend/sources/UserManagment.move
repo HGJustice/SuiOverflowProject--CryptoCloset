@@ -128,6 +128,12 @@ module backend::UserManagment {
         userhub.owner
     }
 
+    public fun get_users(userhub: &UserHub, useraddress: address): &User{
+        let user: &User = object_table::borrow(&userhub.users, useraddress);
+        user
+        
+    }
+
     public fun is_user_active(user: &User): bool {
         user.isActive
     }
