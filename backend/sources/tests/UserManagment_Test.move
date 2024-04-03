@@ -45,6 +45,12 @@ module backend::UserManagment_Test{
                test_scenario::return_shared(userhub);
 
         };
+        // test_scenario::next_tx(scenario, owner);
+        // {
+        //     let userhub = test_scenario::take_shared<UserHub>(scenario);
+        //     let user = UserManagment::get_user(&userhub, owner);
+        //     test_scenario::return_shared(userhub);
+        // };
         test_scenario::end(scenario_val);
     }
 }

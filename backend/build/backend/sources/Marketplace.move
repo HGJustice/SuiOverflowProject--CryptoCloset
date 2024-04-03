@@ -9,16 +9,11 @@ module backend::Marketplace {
     use sui::event;
     use sui::coin::{Self, Coin};
 
-    use backend::UserManagment::{Listing, User};
+    use backend::UserManagment::{Listing};
 
     struct MarketPlace<phantom COIN> has key {
         id: UID,
-        items: ObjectTable<u64, Listing>,
+        items: Listing,
         payments: ObjectTable<address, Coin<COIN>>
-    }
-
-    public fun listItem<Listing, COIN>(marketplace: &mut MarketPlace<COIN>, ctx: TxContext){
-        let listing = UserManagment::get_user_listings()
-        object_table::add(&mut marketplace.items, item.id, item);
     }
 }

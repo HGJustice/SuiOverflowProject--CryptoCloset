@@ -8,8 +8,6 @@ module backend::UserManagment {
     use sui::object_table::{Self, ObjectTable};
     use sui::event;
 
- 
-
     const USER_ALREADY_CREATED: u64 = 0;
     const NOT_THE_OWNER: u64 = 1;
 
@@ -136,8 +134,8 @@ module backend::UserManagment {
         object_table::add(&mut user.listings,  userhub.counter, newListing );
     }
 
-    public fun get_user(userhub: &UserHub, _ctx: &TxContext): (String, String, u64, Option<String>, u64, String, String, address, bool){
-         let user: &User = object_table::borrow(&userhub.users, tx_context::sender(_ctx));
+    public fun get_user(userhub: &UserHub, useraddress: address): (String, String, u64, Option<String>, u64, String, String, address, bool){
+         let user: &User = object_table::borrow(&userhub.users, useraddress);
         (
             user.firstName,
             user.lastName,
