@@ -2,15 +2,27 @@ module backend::UserManagment {
     use std::string::{Self, String};
     use std::option::{Self, Option};
     use sui::transfer;
+    use sui::url::{Self, Url};
     use sui::object::{Self, UID, ID};
     use sui::tx_context::{Self, TxContext};
     use sui::object_table::{Self, ObjectTable};
     use sui::event;
 
-    use backend::ListingContract::Listing;
+ 
 
     const USER_ALREADY_CREATED: u64 = 0;
     const NOT_THE_OWNER: u64 = 1;
+
+    struct Listing has key, store {
+        id: UID,
+        picture: Url,
+        owner: address,
+        description: String, 
+        category: String, 
+        brand: String,
+        condition: String,
+        price: u64,
+    }
 
     struct User has key, store {
         id: UID, 
@@ -31,6 +43,13 @@ module backend::UserManagment {
         owner: address,
         counter: u64,
         users: ObjectTable<address, User>,
+    }
+
+    struct ListingCreated has copy, drop {
+        id: ID,
+        owner: address,
+        brand: String,
+        price: u64,
     }
 
     struct UserCreated has copy, drop {
@@ -56,12 +75,9 @@ module backend::UserManagment {
         )
     }
 
-    public entry fun create_user(firstname: vector<u8>, lastname: vector<u8>, 
-    dob: u64,phonenumber: u64, email: vector<u8>, username: vector<u8>, userhub: &mut UserHub, _ctx: &mut TxContext){
-        let potentialUser = object_table::borrow_mut(&mut userhub.users, tx_context::sender(_ctx));
-        assert!(potentialUser.isActive == false, USER_ALREADY_CREATED);
-
-        userhub.counter = userhub.counter + 1;
+    public entry fun create_user(firstname: vector<u8>, lastname: vector<u8>, dob: u64, phonenumber: u64, 
+                    email: vector<u8>, username: vector<u8>, userhub: &mut UserHub, _ctx: &mut TxContext){
+       
         let id = object::new(_ctx);
         
         event::emit(
@@ -87,6 +103,37 @@ module backend::UserManagment {
         };
 
         object_table::add(&mut userhub.users, tx_context::sender(_ctx), newUser);
+    }
+
+     public entry fun create_listing(picture: vector<u8>, description: vector<u8>, category:vector<u8>, brand:vector<u8>,
+                                         condition:vector<u8>, price: u64, userhub: &mut UserHub, _ctx: &mut TxContext) {
+
+        let user = object_table::borrow_mut(&mut userhub.users, tx_context::sender(_ctx));                                                                                     
+        let id = object::new(_ctx);
+
+        event::emit(
+            ListingCreated{
+                id: object::uid_to_inner(&id),
+                owner: tx_context::sender(_ctx),
+                brand: string::utf8(brand),
+                price: price,
+            }
+        );
+
+       userhub.counter = userhub.counter + 1;
+
+        let newListing = Listing{
+            id: id,
+            picture: url::new_unsafe_from_bytes(picture),
+            owner: tx_context::sender(_ctx),
+            description: string::utf8(description),
+            category: string::utf8(category),
+            brand: string::utf8(brand),
+            condition: string::utf8(condition),
+            price: price,
+        };
+
+        object_table::add(&mut user.listings,  userhub.counter, newListing );
     }
 
     public fun get_user(userhub: &UserHub, _ctx: &TxContext): (String, String, u64, Option<String>, u64, String, String, address, bool){
@@ -125,6 +172,7 @@ module backend::UserManagment {
     public fun init_for_testing(_ctx: &mut TxContext){
         init(_ctx);
     }
+
     public fun getOwner(userhub: &UserHub): address {
         userhub.owner
     }
@@ -132,15 +180,25 @@ module backend::UserManagment {
     public fun get_users(userhub: &UserHub, useraddress: address): &User{
         let user: &User = object_table::borrow(&userhub.users, useraddress);
         user
-        
+    }
+
+    public fun get_users_own(userhub: &mut UserHub, useradddress: address): &mut User {
+        let user: &mut User = object_table::borrow_mut(&mut userhub.users, useradddress);
+        user
+    }
+
+    public fun get_user_listings(user: &User, id: u64): &Listing{
+        let listing: &Listing = object_table::borrow(&user.listings, id);
+        listing
     }
 
     public fun is_user_active(user: &User): bool {
         user.isActive
     }
 
-    
-
-
-
+    public fun get_listing_price(listing: &Listing):u64 {
+        listing.price
+    }
 }
+
+

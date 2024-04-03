@@ -5,7 +5,7 @@ module backend::UserManagment_Test{
     use backend::UserManagment::{Self, User, UserHub};
 
     #[test]
-    fun test_crate(){
+    fun test_init_and_add_user(){
         let owner = @0xA;
         let _addy1 = @0xB;
         let _addy2 = @0xC;
@@ -29,16 +29,22 @@ module backend::UserManagment_Test{
         test_scenario::next_tx(scenario, owner);
         {
            let userhub = test_scenario::take_shared<UserHub>(scenario);
-           UserManagment::create_user(b"kris", b"taylor", 031084, 902893, b"hei@l.de", b"bully", &mut userhub, test_scenario::ctx(scenario));
-           let user = UserManagment::get_users(&userhub,owner );
+           UserManagment::create_user(b"simon", b"says", 031097, 08320984, b"hi@t.com", b"bully", &mut userhub, test_scenario::ctx(scenario));
+           let user = UserManagment::get_users(&userhub, owner);
            assert!(UserManagment::is_user_active(user) == true, 0);
-
-
            test_scenario::return_shared(userhub);
            
         };
+        test_scenario::next_tx(scenario, owner);
+        {
+               let userhub = test_scenario::take_shared<UserHub>(scenario);
+               UserManagment::create_listing(b"supremeHoodie", b"fake hoodie", b"hood/jacket", b"Supreme", b"brand new", 100, &mut userhub, test_scenario::ctx(scenario));
+               let user = UserManagment::get_users(&userhub, owner);
+               let listing = UserManagment::get_user_listings(user, 1);
+               assert!(UserManagment::get_listing_price(listing) == 100, 0);
+               test_scenario::return_shared(userhub);
 
-        
+        };
         test_scenario::end(scenario_val);
     }
 }
