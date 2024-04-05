@@ -20,6 +20,7 @@ module backend::UserManagment {
         brand: String,
         condition: String,
         price: u64,
+        counter: u64,
     }
 
     struct User has key, store {
@@ -118,8 +119,6 @@ module backend::UserManagment {
             }
         );
 
-       userhub.counter = userhub.counter + 1;
-
         let newListing = Listing{
             id: id,
             picture: url::new_unsafe_from_bytes(picture),
@@ -129,9 +128,11 @@ module backend::UserManagment {
             brand: string::utf8(brand),
             condition: string::utf8(condition),
             price: price,
+            counter: 0,
         };
+        newListing.counter = newListing.counter + 1;
 
-        object_table::add(&mut user.listings,  userhub.counter, newListing );
+        object_table::add(&mut user.listings, newListing.counter, newListing );
     }
 
     public fun get_user(userhub: &UserHub, useraddress: address): (String, String, u64, Option<String>, u64, String, String, address, bool){
@@ -185,7 +186,7 @@ module backend::UserManagment {
         user
     }
 
-    public fun get_user_listings(user: &User, id: u64): &Listing{
+    public fun get_user_listings(user: &User, id: u64): Listing{
         let listing: &Listing = object_table::borrow(&user.listings, id);
         listing
     }
@@ -197,6 +198,8 @@ module backend::UserManagment {
     public fun get_listing_price(listing: &Listing):u64 {
         listing.price
     }
-}
+
+    public fun get_listing_counter(listing: &Listing): u64 {}
+ }
 
 
