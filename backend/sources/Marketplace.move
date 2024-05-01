@@ -17,9 +17,9 @@ module backend::Marketplace {
         payments: ObjectTable<address, Coin<COIN>>
     }
 
-    public fun listItem<COIN>(marketplace: &mut MarketPlace<COIN>, ctx: &mut TxContext, userhub: &UserHub){
-        let user = UserManagment::get_users(userhub, tx_context::sender(ctx));
-        let listing = UserManagment::get_user_listings(user, 1);
-        object_table::add(&mut marketplace.items, UserManagment::get_listing_counter(listing), listing);
-    }
+    // public fun listItem<COIN>(marketplace: &mut MarketPlace<COIN>, ctx: &mut TxContext, userhub: &UserHub){
+    //     let user = UserManagment::get_users(userhub, tx_context::sender(ctx));
+    //     let listing = UserManagment::get_user_listings(user, 1);
+    //     object_table::add(&mut marketplace.items, UserManagment::get_listing_counter(listing), listing);
+    // }
 }

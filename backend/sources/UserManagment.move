@@ -14,7 +14,7 @@ module backend::UserManagment {
     struct Listing has key, store {
         id: UID,
         picture: Url,
-        owner: address,
+        owner: address, 
         description: String, 
         category: String, 
         brand: String,
@@ -186,8 +186,8 @@ module backend::UserManagment {
         user
     }
 
-    public fun get_user_listings(user: &User, id: u64): Listing{
-        let listing: &Listing = object_table::borrow(&user.listings, id);
+    public fun get_user_listings(user: &User, id: u64): &Listing{
+        let listing = object_table::borrow(&user.listings, id);
         listing
     }
 
@@ -195,11 +195,11 @@ module backend::UserManagment {
         user.isActive
     }
 
-    public fun get_listing_price(listing: &Listing):u64 {
+    public fun get_listing_price(listing: &Listing): u64 {
         listing.price
     }
 
-    public fun get_listing_counter(listing: &Listing): u64 {}
+    // public fun get_listing_counter(listing: &Listing): u64 {}
  }
 
 
